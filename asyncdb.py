@@ -1,6 +1,6 @@
 import asyncpg
 import logging
-from typing import Generator, TypedDict, List, AsyncGenerator
+from typing import Awaitable, Generator, TypedDict, List, AsyncGenerator
 from contextlib import asynccontextmanager, AbstractAsyncContextManager
 
 LOGGER = logging.getLogger(__name__)
@@ -72,13 +72,15 @@ class AsyncDb(AbstractAsyncContextManager):
             async with conn.transaction():
                 yield conn
 
-    async def run_transaction(self, tr: Transaction):
+    async def run_transaction(self, tr: Transaction) -> Awaitable[bool]:
         try:
             async with self.__connection() as conn:
                 for q in tr.get_queries():
                     await conn.execute(q.query_str, *(q.args))
+            return True
         except:
             LOGGER.error(f'Transaction Failed')
+            return False
 
     async def get_records(self, q: Query) -> AsyncGenerator:
         async with self.__connection() as conn:

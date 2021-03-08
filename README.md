@@ -17,7 +17,7 @@ q = Query(query_str, name, age)
 tr.append_query(q)
 
 async with AsyncDb(1, 2, conn_params) as db:
-    await db.run_transaction(tr)
+    res = await db.run_transaction(tr)
 ```
 
 Select

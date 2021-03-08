@@ -25,8 +25,7 @@ async def test_insertions_async():
    async with AsyncDb(5, 10, conn_params) as db:
       coros = [db.run_transaction(tr) for tr in trs]
       coro = asyncio.gather(*coros)
-      await coro
-
+      res_lst = await coro
 
 async def test_insertion_sync():
    query_str = 'INSERT INTO player (name, age) VALUES ($1, $2)' 
@@ -61,9 +60,9 @@ if __name__ == '__main__':
    end = time.perf_counter()
    print(f'async {end - start:0.2f} seconds')
 
-   start = time.perf_counter()
-   asyncio.run(test_insertion_sync())
-   end = time.perf_counter()
-   print(f'sync {end - start:0.2f} seconds')
+   # start = time.perf_counter()
+   # asyncio.run(test_insertion_sync())
+   # end = time.perf_counter()
+   # print(f'sync {end - start:0.2f} seconds')
 
    asyncio.run(test_select())
