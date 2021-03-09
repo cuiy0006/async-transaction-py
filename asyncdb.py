@@ -78,8 +78,8 @@ class AsyncDb(AbstractAsyncContextManager):
                 for q in tr.get_queries():
                     await conn.execute(q.query_str, *(q.args))
             return True
-        except:
-            LOGGER.error(f'Transaction Failed')
+        except Exception as e:
+            LOGGER.error(f'Transaction Failed: {e}')
             return False
 
     async def get_records(self, q: Query) -> AsyncGenerator:
